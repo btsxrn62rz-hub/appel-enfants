@@ -1,141 +1,71 @@
+
 <!DOCTYPE html>
-<html lang='fr'>
+<html lang="fr">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>Appel des groupes</title>
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
-<style>
-  body { padding: 20px; }
-  .child-item { margin-bottom: 10px; }
-  .dark-mode { background-color: #121212; color: #ffffff; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appel – Groupes Scouts</title>
+  style.css
+  <!-- Chart.js pour les statistiques -->
+  <script src.jsdelivr.net/npm/chart.js</script>
+  <!-- QRCode.js pour le QR Code -->
+  https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js</script>
 </head>
 <body>
-<div class='container'>
-  <h1 class='mb-4'>Appel des groupes</h1>
+  <header class="topbar">
+    <h1>Appel – Groupes Scouts</h1>
+    <button id="themeToggle" aria-label="Basculer thème">🌙/☀️</button>
+  </header>
 
-  <button class='btn btn-secondary mb-3' onclick='toggleDarkMode()'>Mode sombre/clair</button>
+  <main>
+    <!-- Contrôles -->
+    <section class="controls">
+      <label for="callDate">Date :</label>
+      <input type="date" id="callDate" />
+      <button id="validateCall" class="primary">Valider l'appel</button>
+    </section>
 
-  <!-- Groupe Louveteaux-Louvettes -->
-  <h2>Louveteaux-Louvettes</h2>
-  <input type='text' id='new-child-louv' class='form-control mb-2' placeholder="Nom">
-  <button class='btn btn-primary mb-3' onclick='addChild("louv")'>Ajouter</button>
-  <div id='children-list-louv' class='mb-3'></div>
-  <button class='btn btn-success' onclick='validateAttendance("louv")'>Valider l'appel</button>
-  <button class='btn btn-secondary ms-2' onclick='exportCSV("louv")'>Exporter CSV</button>
+    <!-- Groupes -->
+    <section class="groups">
+      <div class="group">
+        <h2>Louveteaux-Louvettes</h2>
+        <input id="addName-LL" type="text" placeholder="Nom" />
+        <button class="addBtn" data-target="LL">Ajouter</button>
+        <button class="exportBtn" data-target="LL">Export CSV</button>
+        <ul id="list-LL"></ul>
+      </div>
+      <div class="group">
+        <h2>Éclaireurs-Éclaireuses</h2>
+        <input id="addName-EE" type="text" placeholder="Nom" />
+        <button class="addBtn" data-target="EE">Ajouter</button>
+        <button class="exportBtn" data-target="EE">Export CSV</button>
+        <ul id="list-EE"></ul>
+      </div>
+    </section>
 
-  <!-- Groupe Éclaireurs-Éclaireuses -->
-  <h2 class='mt-4'>Éclaireurs-Éclaireuses</h2>
-  <input type='text' id='new-child-ecl' class='form-control mb-2' placeholder="Nom">
-  <button class='btn btn-primary mb-3' onclick='addChild("ecl")'>Ajouter</button>
-  <div id='children-list-ecl' class='mb-3'></div>
-  <button class='btn btn-success' onclick='validateAttendance("ecl")'>Valider l'appel</button>
-  <button class='btn btn-secondary ms-2' onclick='exportCSV("ecl")'>Exporter CSV</button>
+    <!-- Historique -->
+    <section class="history">
+      <h2>Historique</h2>
+      <input type="date" id="filterDate" />
+      <button id="clearFilter">Effacer filtre</button>
+      <div id="historyContainer"></div>
+    </section>
 
-  <!-- Historique -->
-  <h3 class='mt-4'>Historique des appels</h3>
-  <input type='date' id='filter-date' class='form-control mb-2' onchange='filterHistory()'>
-  <div id='history'></div>
-</div>
+    <!-- Statistiques -->
+    <section class="stats">
+      <h2>Statistiques des présences</h2>
+      <canvas id="presenceChart" width="600" height="280"></canvas>
+    </section>
 
-<script>
-let children = {
-  louv: JSON.parse(localStorage.getItem('children_louv')) || ["Alice", "Bob"],
-  ecl: JSON.parse(localStorage.getItem('children_ecl')) || ["Charlie", "Diane"]
-};
-let history = JSON.parse(localStorage.getItem('history')) || [];
+    <!-- QR Code -->
+    <section class="qr">
+      <h2>Partager cette page</h2>
+      <div id="qrcode"></div>
+    </section>
+  </main>
 
-function toggleDarkMode() {
-  document.body.classList.toggle('dark-mode');
-}
+  <footer>
+    <p>Fonctionne en local et sur GitHub Pages. Données stockées dans LocalStorage.</p>
+  </footer>
 
-function renderLists() {
-  renderList('louv');
-  renderList('ecl');
-}
-
-function renderList(group) {
-  const container = document.getElementById(`children-list-${group}`);
-  container.innerHTML = '';
-  children[group].forEach((child, index) => {
-    container.innerHTML += `
-      <div class='child-item'>
-        <input type='checkbox' id='${group}-${index}'>
-        <label for='${group}-${index}'>${child}</label>
-        <button class='btn btn-sm btn-danger ms-2' onclick='removeChild("${group}", ${index})'>Supprimer</button>
-      </div>`;
-  });
-}
-
-function addChild(group) {
-  const input = document.getElementById(`new-child-${group}`);
-  const name = input.value.trim();
-  if (name) {
-    children[group].push(name);
-    localStorage.setItem(`children_${group}`, JSON.stringify(children[group]));
-    input.value = '';
-    renderList(group);
-  }
-}
-
-function removeChild(group, index) {
-  children[group].splice(index, 1);
-  localStorage.setItem(`children_${group}`, JSON.stringify(children[group]));
-  renderList(group);
-}
-
-function validateAttendance(group) {
-  const date = new Date().toLocaleDateString();
-  let result = [];
-  children[group].forEach((child, index) => {
-    const present = document.getElementById(`${group}-${index}`).checked;
-    result.push({ name: child, status: present ? 'Présent' : 'Absent', group });
-  });
-  history.push({ date, result });
-  localStorage.setItem('history', JSON.stringify(history));
-  alert(`Appel enregistré pour ${group}`);
-  renderHistory();
-}
-
-function renderHistory(filteredDate = null) {
-  const container = document.getElementById('history');
-  container.innerHTML = '';
-  history.forEach(entry => {
-    if (!filteredDate || entry.date === filteredDate) {
-      let html = `<strong>${entry.date}</strong><ul>`;
-      entry.result.forEach(r => {
-        html += `<li>[${r.group}] ${r.name} : ${r.status}</li>`;
-      });
-      html += '</ul>';
-      container.innerHTML += html;
-    }
-  });
-}
-
-function filterHistory() {
-  const date = document.getElementById('filter-date').value;
-  renderHistory(date);
-}
-
-function exportCSV(group) {
-  let csvContent = "Date,Groupe,Nom,Statut
-";
-  history.forEach(entry => {
-    entry.result.filter(r => r.group === group).forEach(r => {
-      csvContent += `${entry.date},${r.group},${r.name},${r.status}
-`;
-    });
-  });
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `historique_${group}.csv`;
-  link.click();
-}
-
-renderLists();
-renderHistory();
-</script>
-</body>
-</html>
+  <script src="script.js" deferhtml>
