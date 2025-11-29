@@ -6,14 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Appel – Groupes Scouts</title>
   style.css
-  <!-- Chart.js pour les statistiques -->
-  <script src.jsdelivr.net/npm/chart.js</script>
-  <!-- QRCode.js pour le QR Code -->
-  https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js</script>
-</head>
-<body>
-  <header class="topbar">
-    <h1>Appel – Groupes Scouts</h1>
+
+  <!-- Chart.js (UMD, version stable 4.x) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.umd.min.js</script>
+  <!-- QRCode.js (cdnjs, chemin fiable) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+          integrity="sha512-LVZnW31f8q0j6r1>Appel – Groupes Scouts</h1>
     <button id="themeToggle" aria-label="Basculer thème">🌙/☀️</button>
   </header>
 
@@ -29,38 +27,48 @@
     <section class="groups">
       <div class="group">
         <h2>Louveteaux-Louvettes</h2>
-        <input id="addName-LL" type="text" placeholder="Nom" />
-        <button class="addBtn" data-target="LL">Ajouter</button>
-        <button class="exportBtn" data-target="LL">Export CSV</button>
-        <ul id="list-LL"></ul>
+        <div class="add-row">
+          <input id="addName-LL" type="text" placeholder="Nom" />
+          <button class="addBtn" data-target="LL">Ajouter</button>
+          <button class="exportBtn" data-target="LL">Export CSV</button>
+        </div>
+        <ul id="list-LL" class="children-list"></ul>
       </div>
+
       <div class="group">
         <h2>Éclaireurs-Éclaireuses</h2>
-        <input id="addName-EE" type="text" placeholder="Nom" />
-        <button class="addBtn" data-target="EE">Ajouter</button>
-        <button class="exportBtn" data-target="EE">Export CSV</button>
-        <ul id="list-EE"></ul>
+        <div class="add-row">
+          <input id="addName-EE" type="text" placeholder="Nom" />
+          <button class="addBtn" data-target="EE">Ajouter</button>
+          <button class="exportBtn" data-target="EE">Export CSV</button>
+        </div>
+        <ul id="list-EE" class="children-list"></ul>
       </div>
     </section>
 
     <!-- Historique -->
     <section class="history">
       <h2>Historique</h2>
-      <input type="date" id="filterDate" />
-      <button id="clearFilter">Effacer filtre</button>
-      <div id="historyContainer"></div>
+      <div class="filters">
+        <label for="filterDate">Filtrer par date</label>
+        <input type="date" id="filterDate" />
+        <button id="clearFilter">Effacer filtre</button>
+      </div>
+      <div id="historyContainer" class="history-container" aria-live="polite"></div>
     </section>
 
     <!-- Statistiques -->
     <section class="stats">
       <h2>Statistiques des présences</h2>
-      <canvas id="presenceChart" width="600" height="280"></canvas>
+      <canvas id="presenceChart" width="600" height="280" aria-label="Graphique des présences"></canvas>
+      <p id="chartStatus" class="muted"></p>
     </section>
 
     <!-- QR Code -->
     <section class="qr">
       <h2>Partager cette page</h2>
-      <div id="qrcode"></div>
+      <div id="qrcode" title="QR Code vers cette page"></div>
+      <p id="qrStatus" class="muted"></p>
     </section>
   </main>
 
@@ -68,4 +76,6 @@
     <p>Fonctionne en local et sur GitHub Pages. Données stockées dans LocalStorage.</p>
   </footer>
 
-  <script src="script.js" deferhtml>
+  script.js</script>
+</body>
+</html>
