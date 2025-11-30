@@ -115,7 +115,7 @@ function openTab(evt, groupName) {
 // --- 3. EXPORTATION (MODIFIÉE POUR APPS SCRIPT) ---
 
 // URL de l'application Google Apps Script pour l'enregistrement sur Drive
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtH20vHcaC7-V2Nr16_BF8WIwtThsNnIbFDLqKPYWNAeBRBpTiYPMHSo5bGh8owx4-/exec"; 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylDOZOcMB7SqQ3aMR3skS6AfJrLMVVGqsrujHFsU4LyWsqnErr9qNiOP8KMEhB8cKr/exec"; 
 
 function exporterAppel() {
     // Variable pour stocker le contenu CSV, y compris le caractère BOM (\uFEFF) pour les accents
