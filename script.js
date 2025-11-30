@@ -112,27 +112,57 @@ function openTab(evt, groupName) {
     evt.currentTarget.className += " active";
 }
 
-// --- 3. EXPORTATION ---
+// --- 3. EXPORTATION (MODIFIÉE POUR APPS SCRIPT) ---
+
+// URL de l'application Google Apps Script pour l'enregistrement sur Drive
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyou0C_WzhXA3xSLBjFg0sM8v_zpwgEL0o3XHf6ss_s3zASjOWzpYba2NO706rkjs9N/exec"; 
+
 function exporterAppel() {
-    // Le caractère \uFEFF force Excel à lire les accents correctement
-    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
-    csvContent += "Groupe;Nom;Statut;Date\n";
+    // Variable pour stocker le contenu CSV, y compris le caractère BOM (\uFEFF) pour les accents
+    let csvData = "\uFEFF" + "Groupe;Nom;Statut;Date\n";
 
     const dateJour = new Date().toLocaleDateString('fr-FR');
+    // Le nom de fichier est dynamique avec la date du jour
+    const filename = "Appel_Scout_" + dateJour.replace(/\//g, '-') + ".csv";
 
-    processList('liste-louveteaux', 'Louveteau', csvContent, dateJour, (res1) => {
-        processList('liste-eclaireurs', 'Eclaireur', res1, dateJour, (finalCsv) => {
-            const encodedUri = encodeURI(finalCsv);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            
-            // Nom du fichier : Appel_Scout_jj-mm-aaaa.csv
-            let filename = "Appel_Scout_" + dateJour.replace(/\//g, '-') + ".csv";
-            
-            link.setAttribute("download", filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+    // Fonction pour collecter toutes les données des deux groupes
+    function collectData(currentCsv, callback) {
+        processList('liste-louveteaux', 'Louveteau', currentCsv, dateJour, (res1) => {
+            processList('liste-eclaireurs', 'Eclaireur', res1, dateJour, (finalCsv) => {
+                callback(finalCsv);
+            });
+        });
+    }
+
+    // 1. Collecter les données
+    collectData(csvData, (finalCsvContent) => {
+        // 2. Préparer les données pour l'envoi
+        const payload = {
+            csvData: finalCsvContent,
+            filename: filename
+        };
+
+        // 3. Envoyer les données au script Google Apps
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'cors', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("✅ Succès ! L'appel a été enregistré dans Google Drive sous le nom : " + filename);
+            } else {
+                alert("❌ Erreur lors de l'enregistrement sur Drive. Message : " + data.message);
+                console.error(data.message);
+            }
+        })
+        .catch((error) => {
+            alert("❌ Erreur de communication avec le script Google. Le fichier n'a pas été enregistré. Vérifiez la console pour plus de détails.");
+            console.error('Erreur:', error);
         });
     });
 }
