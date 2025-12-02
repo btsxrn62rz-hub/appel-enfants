@@ -21,17 +21,29 @@
     <div id="Louveteaux" class="tab-content" style="display: block;">
         <h2>Liste des Louveteaux</h2>
         <ul id="liste-louveteaux" class="scout-list">
-            </ul>
+            <li>Chargement...</li>
+        </ul>
     </div>
 
     <div id="Eclaireurs" class="tab-content">
         <h2>Liste des Éclaireurs</h2>
         <ul id="liste-eclaireurs" class="scout-list">
-            </ul>
+            <li>Chargement...</li>
+        </ul>
     </div>
 
     <div class="actions">
         <button onclick="exporterAppel()" class="btn-save">💾 Enregistrer l'Appel sur Drive</button>
+    </div>
+
+    <div class="add-section" style="margin-top: 30px; padding: 20px; background: #fff; border-radius: 8px;">
+        <h3>➕ Ajouter un jeune (Permanent)</h3>
+        <input type="text" id="nouveau-nom" placeholder="Prénom Nom" style="padding: 10px; width: 70%; margin-bottom: 10px;">
+        <select id="nouveau-groupe" style="padding: 10px;">
+            <option value="Louveteaux">Louveteaux</option>
+            <option value="Eclaireurs">Eclaireurs</option>
+        </select>
+        <button onclick="ajouterEnfant()" style="background-color: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Ajouter</button>
     </div>
 
     <script src="script.js"></script>
