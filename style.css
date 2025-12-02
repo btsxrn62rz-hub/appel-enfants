@@ -4,113 +4,57 @@ body {
     margin: 0;
     padding: 20px;
     text-align: center;
+    padding-bottom: 100px; /* Pour l'espace du bas */
 }
 
-header h1 {
-    color: #2c3e50;
-    margin-bottom: 5px;
-}
+header h1 { color: #2c3e50; margin-bottom: 5px; }
+#date-jour { color: #7f8c8d; margin-top: 0; margin-bottom: 20px; font-weight: bold; }
 
-#date-jour {
-    color: #7f8c8d;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.tabs {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
+.tabs { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
 .tab-link {
-    background-color: #ecf0f1;
-    border: 2px solid #bdc3c7;
-    padding: 12px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 25px;
-    font-weight: bold;
-    color: #7f8c8d;
-    transition: all 0.3s;
+    background-color: #ecf0f1; border: 2px solid #bdc3c7; padding: 12px 20px;
+    font-size: 16px; cursor: pointer; border-radius: 25px; font-weight: bold; color: #7f8c8d;
 }
-
 .tab-link.active {
-    background-color: #2980b9;
-    color: white;
-    border-color: #2980b9;
-    box-shadow: 0 4px 6px rgba(41, 128, 185, 0.3);
+    background-color: #2980b9; color: white; border-color: #2980b9;
 }
 
 .tab-content {
-    display: none;
-    background: white;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    max-width: 600px;
-    margin: 0 auto;
+    display: none; background: white; padding: 15px; border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;
 }
 
-.scout-list {
-    list-style-type: none;
-    padding: 0;
-}
+.scout-list { list-style-type: none; padding: 0; }
 
+/* Mise en page de chaque ligne : Flexbox pour séparer nom et boutons */
 .scout-list li {
-    padding: 15px 20px;
-    margin: 10px 0;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 18px;
-    color: #34495e;
-    transition: all 0.2s;
-    user-select: none; /* Empêche de sélectionner le texte en cliquant vite */
+    padding: 10px 15px; margin: 10px 0; background-color: #f8f9fa;
+    border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 18px; color: #34495e; user-select: none;
 }
 
-/* Vert quand présent */
 .scout-list li.present {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-    font-weight: bold;
+    background-color: #d4edda; border-color: #c3e6cb; color: #155724; font-weight: bold;
 }
 
-.scout-list li.present::after {
-    content: "✅";
-    font-size: 1.2em;
-}
+/* Zone du nom */
+.nom-eleve { flex-grow: 1; text-align: left; }
 
-.scout-list li::after {
-    content: "⚪"; /* Rond vide pour absent */
-    opacity: 0.3;
-}
+/* Zone des boutons d'action */
+.item-actions { display: flex; gap: 10px; }
 
-.actions {
-    margin-top: 40px;
-    margin-bottom: 60px;
+/* Style des petits boutons Edit/Delete */
+.btn-mini {
+    background: none; border: none; font-size: 1.2em; cursor: pointer;
+    opacity: 0.6; transition: opacity 0.2s; padding: 5px;
 }
+.btn-mini:hover { opacity: 1; transform: scale(1.1); }
 
+.scout-list li.present .nom-eleve::after { content: " ✅"; }
+
+.actions { margin-top: 40px; margin-bottom: 60px; }
 .btn-save {
-    background-color: #e67e22;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
-    font-weight: bold;
-    transition: transform 0.2s;
-}
-
-.btn-save:active {
-    transform: scale(0.95);
+    background-color: #e67e22; color: white; border: none; padding: 15px 30px;
+    font-size: 18px; border-radius: 50px; cursor: pointer; font-weight: bold;
 }
