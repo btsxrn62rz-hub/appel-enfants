@@ -70,7 +70,7 @@ function ouvrirFiche(event, nomCible, groupe) {
         document.getElementById('modal-tel').innerText = telDisplay;
         document.getElementById('modal-tel-link').href = enfant.tel ? "tel:" + enfant.tel : "#";
 
-        // Mail (Nouveau)
+        // Mail
         let mailDisplay = enfant.mail || "Non renseigné";
         document.getElementById('modal-mail').innerText = mailDisplay;
         document.getElementById('modal-mail-link').href = enfant.mail ? "mailto:" + enfant.mail : "#";
